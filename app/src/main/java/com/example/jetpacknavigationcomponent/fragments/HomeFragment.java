@@ -1,6 +1,7 @@
 package com.example.jetpacknavigationcomponent.fragments;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -14,6 +15,7 @@ import android.view.ViewGroup;
 
 import com.example.jetpacknavigationcomponent.R;
 import com.example.jetpacknavigationcomponent.UserModel;
+import com.example.jetpacknavigationcomponent.camrerax.CameraXActivity;
 import com.example.jetpacknavigationcomponent.databinding.FragmentHomeBinding;
 import com.example.jetpacknavigationcomponent.databinding.FragmentSignInBinding;
 
@@ -31,5 +33,13 @@ public class HomeFragment extends Fragment {
 
     private void initialize(){
         context = getContext();
+        binding.btnOpenCameraX.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), CameraXActivity.class);
+                startActivity(intent);
+            }
+        });
     }
+
 }
