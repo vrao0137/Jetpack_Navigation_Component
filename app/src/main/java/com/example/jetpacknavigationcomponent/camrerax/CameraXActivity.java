@@ -30,9 +30,11 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 import com.example.jetpacknavigationcomponent.databinding.ActivityCameraXactivityBinding;
 import java.io.File;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+import java.util.UUID;
 
 public class CameraXActivity extends AppCompatActivity {
     private final String TAG = CameraXActivity.class.getSimpleName();
@@ -99,13 +101,21 @@ public class CameraXActivity extends AppCompatActivity {
             binding.imgCature.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    SimpleDateFormat mDateFormat = new SimpleDateFormat("yyyyMMddHHmmss", Locale.US);
-                    File file = new File(getBatchDirectoryName(), mDateFormat.format(new Date())+ ".jpg");
-                   // File file = new File(Environment.getExternalStorageDirectory()+"/"+ UUID.randomUUID().toString()+".jpg");
+                    File folder = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + "/CameraX/");
+                    String filename = UUID.randomUUID().toString()+".jpg";
+                    folder.mkdirs();
+                    File file = new File(folder,filename);
+                    try {
+                        file.createNewFile();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
                     imgCap.takePicture(file, new ImageCapture.OnImageSavedListener() {
                         @Override
                         public void onImageSaved(@NonNull File file) {
                             String msg = "Pic captured at " + file.getAbsolutePath();
+                            Log.e(TAG,"FilePathAfter:- "+msg);
                             Toast.makeText(CameraXActivity.this, msg, Toast.LENGTH_SHORT).show();
                         }
 
@@ -123,16 +133,6 @@ public class CameraXActivity extends AppCompatActivity {
 
             CameraX.bindToLifecycle(this, preview, imgCap);
         }
-    }
-
-    public String getBatchDirectoryName() {
-        String app_folder_path = "";
-        app_folder_path = Environment.getExternalStorageDirectory() + "/camerax";
-        File dir = new File(app_folder_path);
-        if (!dir.exists() && !dir.mkdirs()) {
-            Toast.makeText(context, "Trip", Toast.LENGTH_SHORT).show();
-        }
-        return app_folder_path;
     }
 
     private void updateTransform(){
