@@ -47,7 +47,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         navController.addOnDestinationChangedListener(new NavController.OnDestinationChangedListener() {
             @Override
-            public void onDestinationChanged(@NonNull NavController controller, NavDestination destination, Bundle arguments) {
+            public void onDestinationChanged(@NonNull NavController controller, @NonNull NavDestination destination, Bundle arguments) {
                 if (destination.getId() == R.id.signInFragment || destination.getId() == R.id.signUpFragment){
                     bottomNav.setVisibility(View.GONE);
                     binding.drawerButton.setVisibility(View.GONE);

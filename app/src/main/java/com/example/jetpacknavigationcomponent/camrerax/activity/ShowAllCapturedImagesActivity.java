@@ -23,8 +23,7 @@ public class ShowAllCapturedImagesActivity extends AppCompatActivity{
     private final String TAG = ShowAllCapturedImagesActivity.class.getSimpleName();
     private ActivityShowAllCapturedImagesBinding binding;
     Context context;
-    private List<String> listOfImages = new ArrayList<>();
-    private ShowAllCapturedImagesAdapter showAllCapturedImagesAdapter;
+    private final List<String> listOfImages = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,7 +56,7 @@ public class ShowAllCapturedImagesActivity extends AppCompatActivity{
     private void initializeAdapter(){
         GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 3);
         binding.rcvShowAllImages.setLayoutManager(gridLayoutManager);
-        showAllCapturedImagesAdapter = new ShowAllCapturedImagesAdapter(this,listOfImages);
+        ShowAllCapturedImagesAdapter showAllCapturedImagesAdapter = new ShowAllCapturedImagesAdapter(this, listOfImages);
         binding.rcvShowAllImages.setAdapter(showAllCapturedImagesAdapter);
     }
 }
