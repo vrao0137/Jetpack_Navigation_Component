@@ -3,7 +3,9 @@
     package="com.example.jetpacknavigationcomponent">
 
     <uses-permission android:name="android.permission.CAMERA" />
+
     <uses-feature android:name="android.hardware.camera" />
+
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
@@ -12,13 +14,14 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:requestLegacyExternalStorage="true"
-        android:usesCleartextTraffic="true"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.JetpackNavigationComponent">
-        <activity android:name=".camrerax.activity.FullScreenImageActivity"/>
-        <activity android:name=".camrerax.AllShowImagesActivity" />
-        <activity android:name=".camrerax.CameraXActivity" />
+        android:theme="@style/Theme.JetpackNavigationComponent"
+        android:usesCleartextTraffic="true">
+        <activity android:name=".camrerax.activity.ShowAllCapturedImagesActivity"></activity>
+        <activity android:name=".camrerax.activity.SingleImageShowFullScreenActivity" />
+        <activity android:name=".camrerax.activity.AllShowImagesActivity" />
+        <activity android:name=".camrerax.activity.CameraXActivity" />
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -28,11 +31,12 @@
         </activity>
 
         <provider
-            android:authorities="${applicationId}.fileprovider"
             android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.fileprovider"
             android:exported="false"
-            android:grantUriPermissions="true" >
-            <meta-data android:name="android.support.FILE_PROVIDER_PATHS"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/filepaths" />
         </provider>
     </application>

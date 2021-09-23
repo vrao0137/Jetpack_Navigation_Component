@@ -4,10 +4,10 @@
     android:layout_height="wrap_content">
 
     <ImageView
-        android:paddingTop="10dp"
-        android:paddingBottom="10dp"
-        android:layout_width="128dp"
-        android:layout_height="128dp"
+        android:padding="5dp"
+        android:layout_margin="5dp"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
         android:id="@+id/mediastoreImageView"
         android:layout_centerVertical="true"
         android:layout_centerHorizontal="true" />

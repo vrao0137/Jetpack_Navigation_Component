@@ -1,4 +1,4 @@
-package com.example.jetpacknavigationcomponent.camrerax;
+package com.example.jetpacknavigationcomponent.camrerax.activity;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -7,8 +7,6 @@ import androidx.loader.app.LoaderManager;
 import androidx.loader.content.CursorLoader;
 import androidx.loader.content.Loader;
 import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
@@ -20,11 +18,8 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.widget.Toast;
 
-import com.example.jetpacknavigationcomponent.R;
-import com.example.jetpacknavigationcomponent.camrerax.activity.FullScreenImageActivity;
 import com.example.jetpacknavigationcomponent.camrerax.adapter.MediaStoreAdapter;
 import com.example.jetpacknavigationcomponent.databinding.ActivityAllShowImagesBinding;
-import com.example.jetpacknavigationcomponent.databinding.ActivityCameraXactivityBinding;
 
 public class AllShowImagesActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor>, MediaStoreAdapter.OnClickThumbListener{
     private final String TAG = AllShowImagesActivity.class.getSimpleName();
@@ -123,7 +118,7 @@ public class AllShowImagesActivity extends AppCompatActivity implements LoaderMa
     @Override
     public void OnClickImage(Uri imageUri) {
         // Toast.makeText(MediaThumbMainActivity.this, "Image uri = " + imageUri.toString(), Toast.LENGTH_SHORT).show();
-        Intent fullScreenIntent = new Intent(this, FullScreenImageActivity.class);
+        Intent fullScreenIntent = new Intent(this, SingleImageShowFullScreenActivity.class);
         fullScreenIntent.setData(imageUri);
         startActivity(fullScreenIntent);
     }

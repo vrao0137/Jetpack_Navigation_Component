@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -16,8 +17,14 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.jetpacknavigationcomponent.R;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.UUID;
 
 /**
  * Created by nigelhenshaw on 1/06/2016.
@@ -27,6 +34,7 @@ public class MediaStoreAdapter extends RecyclerView.Adapter<MediaStoreAdapter.Vi
     private Cursor mMediaStoreCursor;
     private final Activity mActivity;
     private final OnClickThumbListener mOnClickThumbListener;
+    File[] allFiles ;
 
     public interface OnClickThumbListener {
         void OnClickImage(Uri imageUri);
@@ -46,16 +54,12 @@ public class MediaStoreAdapter extends RecyclerView.Adapter<MediaStoreAdapter.Vi
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        /*
-        Bitmap bitmap = getBitmapFromMediaStore(position);
+        /*Bitmap bitmap = getBitmapFromMediaStore(position);
         if (bitmap != null) {
             holder.getImageView().setImageBitmap(bitmap);
-        }
-        */
+        }*/
         Glide.with(mActivity)
                 .load(getUriFromMediaStore(position))
-                .centerCrop()
-                .override(96, 96)
                 .into(holder.getImageView());
     }
 
@@ -135,8 +139,32 @@ public class MediaStoreAdapter extends RecyclerView.Adapter<MediaStoreAdapter.Vi
         mMediaStoreCursor.moveToPosition(position);
 
         String dataString = mMediaStoreCursor.getString(dataIndex);
-        Log.e("","PathIskjalkdjkdnmkdm:- "+dataString);
+        Log.e("","dataString:- "+dataString);
         return Uri.parse("file://" + dataString);
+        /*StringBuffer buffer = new StringBuffer();
+        int read = -1;
+        try {
+            FileInputStream fileInputStream = mActivity.openFileInput(String.valueOf(position));
+            while ((read=fileInputStream.read()) != -1){
+                buffer.append(read);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        File folder = new File(mActivity.getFilesDir() + "/CameraX/");
+        folder.mkdirs();
+
+        int dataIndex = mMediaStoreCursor.getColumnIndex(String.valueOf(buffer));
+        Log.e("","dataIndex:- "+dataIndex);
+
+        mMediaStoreCursor.moveToPosition(position);
+        String dataString = null;
+        while (dataIndex != -1){
+            dataString  = mMediaStoreCursor.getString(dataIndex);
+        }
+        Log.e("","dataString:- "+dataString);
+        return Uri.parse("file://" + dataString);*/
     }
 
     private void getOnClickUri(int position) {

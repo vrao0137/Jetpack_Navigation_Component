@@ -11,18 +11,15 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 import com.example.jetpacknavigationcomponent.R;
-import com.example.jetpacknavigationcomponent.camrerax.CameraXActivity;
-import com.example.jetpacknavigationcomponent.databinding.ActivityCameraXactivityBinding;
 import com.example.jetpacknavigationcomponent.databinding.ActivityFullScreenImageBinding;
 
-public class FullScreenImageActivity extends AppCompatActivity implements View.OnLongClickListener{
-    private final String TAG = FullScreenImageActivity.class.getSimpleName();
+public class SingleImageShowFullScreenActivity extends AppCompatActivity implements View.OnLongClickListener{
+    private final String TAG = SingleImageShowFullScreenActivity.class.getSimpleName();
     private ActivityFullScreenImageBinding binding;
-    Context context;
+    private Context context;
     private Uri mImageUri;
 
     @Override
@@ -36,7 +33,13 @@ public class FullScreenImageActivity extends AppCompatActivity implements View.O
     private void initialize(){
         context = this;
         binding.fullScreenImageView.setOnLongClickListener(this);
+       // Calling on Adapter ShowAllCapturedImagesAdapter
+        String imageUri = getIntent().getStringExtra("ImageUri");
+        Glide.with(this)
+                .load(imageUri)
+                .into(binding.fullScreenImageView);
 
+        // Calling on Adapter MediaStoreAdapter
         Intent callingActivityIntent = getIntent();
         if(callingActivityIntent != null) {
             mImageUri = callingActivityIntent.getData();
@@ -69,7 +72,6 @@ public class FullScreenImageActivity extends AppCompatActivity implements View.O
 
     @Override
     public boolean onLongClick(View v) {
-
         Intent shareIntent = createShareIntent();
         startActivity(Intent.createChooser(shareIntent, "send to"));
         return true;

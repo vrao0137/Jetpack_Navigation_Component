@@ -1,8 +1,6 @@
-package com.example.jetpacknavigationcomponent.camrerax;
+package com.example.jetpacknavigationcomponent.camrerax.activity;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.camera.core.CameraX;
 import androidx.camera.core.ImageCapture;
@@ -15,25 +13,26 @@ import androidx.core.content.ContextCompat;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.os.Bundle;
-import android.os.Environment;
 import android.util.Log;
 import android.util.Rational;
 import android.util.Size;
 import android.view.Surface;
 import android.view.TextureView;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Toast;
+
 import com.example.jetpacknavigationcomponent.databinding.ActivityCameraXactivityBinding;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 public class CameraXActivity extends AppCompatActivity {
@@ -65,7 +64,7 @@ public class CameraXActivity extends AppCompatActivity {
         binding.ivGotoImages.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(context, AllShowImagesActivity.class);
+                Intent intent = new Intent(context, ShowAllCapturedImagesActivity.class);
                 startActivity(intent);
             }
         });
@@ -74,7 +73,6 @@ public class CameraXActivity extends AppCompatActivity {
     private void startCamera(){
         CameraX.unbindAll();
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
-            Log.e(TAG,"Work If condition");
             Rational aspectRatio = new Rational(textureView.getWidth(),textureView.getHeight());
             Size screen = new Size(textureView.getWidth(),textureView.getHeight());
             PreviewConfig pConfig = new PreviewConfig.Builder().setTargetAspectRatio(aspectRatio).setTargetResolution(screen).build();
@@ -82,13 +80,6 @@ public class CameraXActivity extends AppCompatActivity {
             preview.setOnPreviewOutputUpdateListener(new Preview.OnPreviewOutputUpdateListener() {
                 @Override
                 public void onUpdated(Preview.PreviewOutput output) {
-                    ViewGroup parent = (ViewGroup) textureView.getParent();
-                   /* Bitmap bitmap = BitmapFactory.decodeResource(getResources(), parent.addView(textureView));
-
-                    // Set image as bitmap for fourth ImageView
-                    iv4.setImageBitmap(bitmap);*/
-                    // parent.removeView(textureView);
-                   // parent.addView(textureView);
                     textureView.setSurfaceTexture(output.getSurfaceTexture());
                     updateTransform();
                 }
@@ -101,10 +92,23 @@ public class CameraXActivity extends AppCompatActivity {
             binding.imgCature.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    File folder = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + "/CameraX/");
+                    File path = new File(getFilesDir() + "/CameraX/");
                     String filename = UUID.randomUUID().toString()+".jpg";
-                    folder.mkdirs();
-                    File file = new File(folder,filename);
+                    path.mkdirs();
+                    FileOutputStream  fileOutputStream = null;
+                    try {
+                        fileOutputStream = openFileOutput(filename,MODE_PRIVATE);
+                    } catch (FileNotFoundException e) {
+                        e.printStackTrace();
+                    }
+                    finally {
+                        try {
+                            fileOutputStream.close();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    File file = new File(path,filename);
                     try {
                         file.createNewFile();
                     } catch (IOException e) {
@@ -115,7 +119,6 @@ public class CameraXActivity extends AppCompatActivity {
                         @Override
                         public void onImageSaved(@NonNull File file) {
                             String msg = "Pic captured at " + file.getAbsolutePath();
-                            Log.e(TAG,"FilePathAfter:- "+msg);
                             Toast.makeText(CameraXActivity.this, msg, Toast.LENGTH_SHORT).show();
                         }
 
