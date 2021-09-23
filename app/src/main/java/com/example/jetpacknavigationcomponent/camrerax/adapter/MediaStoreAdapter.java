@@ -1,48 +1,33 @@
 package com.example.jetpacknavigationcomponent.camrerax.adapter;
-
-import android.app.Activity;
+import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
-import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-
 import androidx.core.content.FileProvider;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.bumptech.glide.Glide;
 import com.example.jetpacknavigationcomponent.R;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.util.UUID;
 
-/**
- * Created by nigelhenshaw on 1/06/2016.
- */
 public class MediaStoreAdapter extends RecyclerView.Adapter<MediaStoreAdapter.ViewHolder> {
-
     private Cursor mMediaStoreCursor;
-    private final Activity mActivity;
+    private final Context mActivity;
     private final OnClickThumbListener mOnClickThumbListener;
-    File[] allFiles ;
+
+    public MediaStoreAdapter(Context context, OnClickThumbListener mOnClickThumbListener) {
+        this.mActivity = context;
+        this.mOnClickThumbListener = mOnClickThumbListener;
+    }
 
     public interface OnClickThumbListener {
         void OnClickImage(Uri imageUri);
         void OnClickVideo(Uri videoUri);
-    }
-    public MediaStoreAdapter(Activity activity) {
-        this.mActivity = activity;
-        this.mOnClickThumbListener = (OnClickThumbListener)activity;
     }
 
     @Override
@@ -141,30 +126,6 @@ public class MediaStoreAdapter extends RecyclerView.Adapter<MediaStoreAdapter.Vi
         String dataString = mMediaStoreCursor.getString(dataIndex);
         Log.e("","dataString:- "+dataString);
         return Uri.parse("file://" + dataString);
-        /*StringBuffer buffer = new StringBuffer();
-        int read = -1;
-        try {
-            FileInputStream fileInputStream = mActivity.openFileInput(String.valueOf(position));
-            while ((read=fileInputStream.read()) != -1){
-                buffer.append(read);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        File folder = new File(mActivity.getFilesDir() + "/CameraX/");
-        folder.mkdirs();
-
-        int dataIndex = mMediaStoreCursor.getColumnIndex(String.valueOf(buffer));
-        Log.e("","dataIndex:- "+dataIndex);
-
-        mMediaStoreCursor.moveToPosition(position);
-        String dataString = null;
-        while (dataIndex != -1){
-            dataString  = mMediaStoreCursor.getString(dataIndex);
-        }
-        Log.e("","dataString:- "+dataString);
-        return Uri.parse("file://" + dataString);*/
     }
 
     private void getOnClickUri(int position) {
@@ -175,7 +136,6 @@ public class MediaStoreAdapter extends RecyclerView.Adapter<MediaStoreAdapter.Vi
         String dataString = mMediaStoreCursor.getString(dataIndex);
         String authorities = mActivity.getPackageName() + ".fileprovider";
         Uri mediaUri = FileProvider.getUriForFile(mActivity, authorities, new File(dataString));
-//        Uri mediaUri = Uri.parse("file://" + dataString);
 
         switch (mMediaStoreCursor.getInt(mediaTypeIndex)) {
             case MediaStore.Files.FileColumns.MEDIA_TYPE_IMAGE:

@@ -1,12 +1,5 @@
-package com.example.jetpacknavigationcomponent.camrerax.activity;
+package com.example.jetpacknavigationcomponent.camrerax.fragments;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
-import androidx.loader.app.LoaderManager;
-import androidx.loader.content.CursorLoader;
-import androidx.loader.content.Loader;
-import androidx.recyclerview.widget.GridLayoutManager;
 import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
@@ -15,15 +8,28 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+
+import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
+import androidx.fragment.app.Fragment;
+import androidx.loader.app.LoaderManager;
+import androidx.loader.content.CursorLoader;
+import androidx.loader.content.Loader;
+import androidx.recyclerview.widget.GridLayoutManager;
+
 import android.provider.MediaStore;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.example.jetpacknavigationcomponent.camrerax.activity.ShowSingleImageActivity;
 import com.example.jetpacknavigationcomponent.camrerax.adapter.MediaStoreAdapter;
-import com.example.jetpacknavigationcomponent.databinding.ActivityAllShowImagesBinding;
+import com.example.jetpacknavigationcomponent.databinding.FragmentShowAllExternalAndInternalImagesBinding;
 
-public class AllShowImagesActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor>, MediaStoreAdapter.OnClickThumbListener{
-    private final String TAG = AllShowImagesActivity.class.getSimpleName();
-    private ActivityAllShowImagesBinding binding;
+public class ShowALLImagesFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>, MediaStoreAdapter.OnClickThumbListener{
+    private final String TAG = ShowALLImagesFragment.class.getSimpleName();
+    private FragmentShowAllExternalAndInternalImagesBinding binding;
     Context context;
 
     private final static int READ_EXTERNAL_STORAGE_PERMMISSION_RESULT = 0;
@@ -31,23 +37,45 @@ public class AllShowImagesActivity extends AppCompatActivity implements LoaderMa
     private MediaStoreAdapter mMediaStoreAdapter;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        binding = ActivityAllShowImagesBinding.inflate(getLayoutInflater());
-        setContentView(binding.getRoot());
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        binding = FragmentShowAllExternalAndInternalImagesBinding.inflate(inflater,container,false);
         initialize();
+        return binding.getRoot();
     }
 
     private void initialize(){
-        context = this;
+        context = getActivity();
+        initializeAdapter();
+    }
 
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 3);
+    private void initializeAdapter(){
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), 3);
         binding.allImagegsRecyclerView.setLayoutManager(gridLayoutManager);
-        mMediaStoreAdapter = new MediaStoreAdapter(this);
+        mMediaStoreAdapter = new MediaStoreAdapter(context,this);
         binding.allImagegsRecyclerView.setAdapter(mMediaStoreAdapter);
 
         checkReadExternalStoragePermission();
     }
+
+    private void checkReadExternalStoragePermission() {
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if(ContextCompat.checkSelfPermission(context, Manifest.permission.READ_EXTERNAL_STORAGE) ==
+                    PackageManager.PERMISSION_GRANTED) {
+                // Start cursor loader
+                LoaderManager.getInstance(this).initLoader(MEDIASTORE_LOADER_ID, null, this);
+            } else {
+                if(shouldShowRequestPermissionRationale(Manifest.permission.READ_EXTERNAL_STORAGE)) {
+                    Toast.makeText(getActivity(), "App needs to view thumbnails", Toast.LENGTH_SHORT).show();
+                }
+                requestPermissions(new String[] {Manifest.permission.READ_EXTERNAL_STORAGE},
+                        READ_EXTERNAL_STORAGE_PERMMISSION_RESULT);
+            }
+        } else {
+            // Start cursor loader
+            LoaderManager.getInstance(this).initLoader(MEDIASTORE_LOADER_ID, null, this);
+        }
+    }
+
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -55,29 +83,10 @@ public class AllShowImagesActivity extends AppCompatActivity implements LoaderMa
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 //Call cursor loader
                 // Toast.makeText(this, "Now have access to view thumbs", Toast.LENGTH_SHORT).show();
-                getSupportLoaderManager().initLoader(MEDIASTORE_LOADER_ID, null, this);
+                LoaderManager.getInstance(this).initLoader(MEDIASTORE_LOADER_ID, null, this);
             }
         } else {
             super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        }
-    }
-
-    private void checkReadExternalStoragePermission() {
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if(ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) ==
-                    PackageManager.PERMISSION_GRANTED) {
-                // Start cursor loader
-                getSupportLoaderManager().initLoader(MEDIASTORE_LOADER_ID, null, this);
-            } else {
-                if(shouldShowRequestPermissionRationale(Manifest.permission.READ_EXTERNAL_STORAGE)) {
-                    Toast.makeText(this, "App needs to view thumbnails", Toast.LENGTH_SHORT).show();
-                }
-                requestPermissions(new String[] {Manifest.permission.READ_EXTERNAL_STORAGE},
-                        READ_EXTERNAL_STORAGE_PERMMISSION_RESULT);
-            }
-        } else {
-            // Start cursor loader
-            getSupportLoaderManager().initLoader(MEDIASTORE_LOADER_ID, null, this);
         }
     }
 
@@ -96,7 +105,7 @@ public class AllShowImagesActivity extends AppCompatActivity implements LoaderMa
                 + MediaStore.Files.FileColumns.MEDIA_TYPE + "="
                 + MediaStore.Files.FileColumns.MEDIA_TYPE_VIDEO;
         return new CursorLoader(
-                this,
+                context,
                 MediaStore.Files.getContentUri("external"),
                 projection,
                 selection,
@@ -118,7 +127,7 @@ public class AllShowImagesActivity extends AppCompatActivity implements LoaderMa
     @Override
     public void OnClickImage(Uri imageUri) {
         // Toast.makeText(MediaThumbMainActivity.this, "Image uri = " + imageUri.toString(), Toast.LENGTH_SHORT).show();
-        Intent fullScreenIntent = new Intent(this, SingleImageShowFullScreenActivity.class);
+        Intent fullScreenIntent = new Intent(getActivity(), ShowSingleImageActivity.class);
         fullScreenIntent.setData(imageUri);
         startActivity(fullScreenIntent);
     }

@@ -16,8 +16,8 @@ import com.bumptech.glide.Glide;
 import com.example.jetpacknavigationcomponent.R;
 import com.example.jetpacknavigationcomponent.databinding.ActivityFullScreenImageBinding;
 
-public class SingleImageShowFullScreenActivity extends AppCompatActivity implements View.OnLongClickListener{
-    private final String TAG = SingleImageShowFullScreenActivity.class.getSimpleName();
+public class ShowSingleImageActivity extends AppCompatActivity implements View.OnLongClickListener{
+    private final String TAG = ShowSingleImageActivity.class.getSimpleName();
     private ActivityFullScreenImageBinding binding;
     private Context context;
     private Uri mImageUri;

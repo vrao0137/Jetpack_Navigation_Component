@@ -19,7 +19,6 @@ import android.util.Rational;
 import android.util.Size;
 import android.view.Surface;
 import android.view.TextureView;
-import android.view.View;
 import android.widget.Toast;
 
 import com.example.jetpacknavigationcomponent.databinding.ActivityCameraXactivityBinding;
@@ -57,7 +56,7 @@ public class CameraXActivity extends AppCompatActivity {
         }
 
         binding.ivGotoImages.setOnClickListener(v -> {
-            Intent intent = new Intent(context, ShowAllCapturedImagesActivity.class);
+            Intent intent = new Intent(context, ShowALLImagesActivity.class);
             startActivity(intent);
         });
     }

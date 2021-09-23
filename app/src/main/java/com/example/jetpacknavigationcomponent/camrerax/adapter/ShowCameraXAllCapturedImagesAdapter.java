@@ -1,5 +1,5 @@
 package com.example.jetpacknavigationcomponent.camrerax.adapter;
-import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -7,19 +7,18 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
-import com.example.jetpacknavigationcomponent.camrerax.activity.ShowAllCapturedImagesActivity;
-import com.example.jetpacknavigationcomponent.camrerax.activity.SingleImageShowFullScreenActivity;
+import com.example.jetpacknavigationcomponent.camrerax.activity.ShowSingleImageActivity;
 import com.example.jetpacknavigationcomponent.databinding.MediaImageViewBinding;
 
 import java.util.List;
 
-public class ShowAllCapturedImagesAdapter  extends RecyclerView.Adapter<ShowAllCapturedImagesAdapter.ViewHolder>{
-    private Activity mActivity;
+public class ShowCameraXAllCapturedImagesAdapter extends RecyclerView.Adapter<ShowCameraXAllCapturedImagesAdapter.ViewHolder>{
+    private Context mActivity;
     private List<String> listOfImages;
 
 
-    public ShowAllCapturedImagesAdapter(ShowAllCapturedImagesActivity showAllCapturedImagesActivity, List<String> listOfImages) {
-        this.mActivity = showAllCapturedImagesActivity;
+    public ShowCameraXAllCapturedImagesAdapter(Context context, List<String> listOfImages) {
+        this.mActivity = context;
         this.listOfImages = listOfImages;
     }
 
@@ -30,7 +29,7 @@ public class ShowAllCapturedImagesAdapter  extends RecyclerView.Adapter<ShowAllC
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ShowAllCapturedImagesAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ShowCameraXAllCapturedImagesAdapter.ViewHolder holder, int position) {
         Glide.with(mActivity)
                 .load(getUriFromMediaStore(position))
                 .into(holder.binding.mediastoreImageView);
@@ -38,7 +37,7 @@ public class ShowAllCapturedImagesAdapter  extends RecyclerView.Adapter<ShowAllC
         holder.binding.mediastoreImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent fullScreenIntent = new Intent(v.getContext(), SingleImageShowFullScreenActivity.class);
+                Intent fullScreenIntent = new Intent(v.getContext(), ShowSingleImageActivity.class);
                 fullScreenIntent.putExtra("ImageUri",getUriFromMediaStore(position));
                 mActivity.startActivity(fullScreenIntent);
             }

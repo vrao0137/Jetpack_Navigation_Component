@@ -18,8 +18,8 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.JetpackNavigationComponent"
         android:usesCleartextTraffic="true">
-        <activity android:name=".camrerax.activity.ShowAllCapturedImagesActivity"></activity>
-        <activity android:name=".camrerax.activity.SingleImageShowFullScreenActivity" />
+        <activity android:name=".camrerax.activity.ShowALLImagesActivity"></activity>
+        <activity android:name=".camrerax.activity.ShowSingleImageActivity" />
         <activity android:name=".camrerax.activity.AllShowImagesActivity" />
         <activity android:name=".camrerax.activity.CameraXActivity" />
         <activity android:name=".MainActivity">
